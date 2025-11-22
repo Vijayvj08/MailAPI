@@ -33,10 +33,9 @@ public class MailController {
 	
 	
 	@PostMapping("/send")
-	public ResponseEntity<?> sendMail(@RequestBody Mail mail, HttpServletRequest request) {
-	    String authHeader = request.getHeader("Authorization");
-	    String token = authHeader.substring(7);
-	    String userEmail = jwtUtil.extractEmail(token);
+	public ResponseEntity<?> sendMail(@RequestBody Mail mail) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String userEmail = auth.getName();
 
 	    boolean sent = mailService.sendMail(mail, userEmail);
 
@@ -65,8 +64,9 @@ public class MailController {
 	
 	 @GetMapping("/search")
 	    public List<Mail> searchMails(@RequestParam String toEmail, HttpServletRequest request) {
-	        String token = request.getHeader("Authorization").substring(7);
-	        String userEmail = jwtUtil.extractEmail(token);
+	        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	        String userEmail = auth.getName();
+	        
 	        return mailService.searchMailsByRecipient(userEmail, toEmail);
 	    }
 	 

@@ -31,7 +31,8 @@ public class MailService {
 	public List<Mail> getInbox(String toemail) {
 	    return mailRepository.findByToEmail(toemail);
 	}
-
+	
+	//search sender mails
 	public List<Mail> searchMailsByRecipient(String fromEmail, String toEmail) {
         return mailRepository.findByFromEmailAndToEmailContaining(fromEmail, toEmail);
     }
