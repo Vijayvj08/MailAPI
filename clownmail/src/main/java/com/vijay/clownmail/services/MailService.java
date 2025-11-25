@@ -31,14 +31,15 @@ public class MailService {
 	public List<Mail> getInbox(String toemail) {
 	    return mailRepository.findByToEmail(toemail);
 	}
-	
-	//search sender mails
-	public List<Mail> searchMailsByRecipient(String fromEmail, String toEmail) {
-        return mailRepository.findByFromEmailAndToEmailContaining(fromEmail, toEmail);
-    }
+
 	
 	//view sent mails
 	 public List<Mail> getSentMails(String email) {
 	        return mailRepository.findByFromEmail(email);
 	    }
+	 
+	 //delete mail by id
+	 public void deleteMail(Long id) {
+		 mailRepository.deleteById(id);
+	 }
 }
