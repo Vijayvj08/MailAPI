@@ -79,4 +79,15 @@ public class MailController {
 			 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting mail");
 		 }
 	 }
+	 
+	 @GetMapping("/{id}")
+	 public ResponseEntity<?> getMailById(@PathVariable Long id){
+		 try {
+			 return mailService.getMailById(id)
+					 .map(ResponseEntity::ok)
+					 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+		 }catch(Exception e) {
+			 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		 }
+	 }
 }

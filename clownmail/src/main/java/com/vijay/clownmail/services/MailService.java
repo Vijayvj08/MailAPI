@@ -1,6 +1,8 @@
 package com.vijay.clownmail.services;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +43,9 @@ public class MailService {
 	 //delete mail by id
 	 public void deleteMail(Long id) {
 		 mailRepository.deleteById(id);
+	 }
+	 
+	 public Optional<Mail> getMailById(Long id){
+		 return mailRepository.findById(id);
 	 }
 }

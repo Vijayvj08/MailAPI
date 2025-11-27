@@ -66,4 +66,19 @@ public class AuthController {
 		response.put("token", jwt);
 		return ResponseEntity.ok(response);
 	}
+	
+	@PostMapping("/reset-password")
+	public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request){
+		String email = request.get("email");
+		String newPassword = request.get("password");
+		
+		boolean isReset = userService.resetPassword(email, newPassword);
+		
+		if(isReset) {
+			return ResponseEntity.ok(Map.of("message", "password rest sucessfully"));
+			
+		}else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Email not found"));
+		}
+	}
 }

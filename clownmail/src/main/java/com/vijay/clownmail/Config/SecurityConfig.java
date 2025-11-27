@@ -48,7 +48,8 @@ public class SecurityConfig {
 		
 		
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/api/users/register","/api/users/login").permitAll()
+					.requestMatchers("/api/users/register","/api/users/login","/api/users/reset-password").permitAll()
+					.requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
 					.anyRequest().authenticated()
 					)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
