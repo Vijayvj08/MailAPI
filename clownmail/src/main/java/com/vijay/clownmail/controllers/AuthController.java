@@ -51,21 +51,27 @@ public class AuthController {
 	                        "email", savedUser.getEmail()));
 	    }
 	
-	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody Users user){
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-		} catch (BadCredentialsException e){
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+		@PostMapping("/login")
+		public ResponseEntity<?> login(@RequestBody Users user) {
+			
+			if (!userService.existsByEmail(user.getEmail())) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(Map.of("message", "User not found!"));
+			}
+
+			try {
+				authenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+			} catch (BadCredentialsException e) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+						.body(Map.of("message", "Incorrect Password! Try again."));
+			}
+
+			final UserDetails userDetails = customUserService.loadUserByUsername(user.getEmail());
+			final String jwt = jwtUtil.generateToken(userDetails.getUsername());
+
+			return ResponseEntity.ok(Map.of("token", jwt));
 		}
-		
-		final UserDetails UserDetails = customUserService.loadUserByUsername(user.getEmail());
-		final String jwt = jwtUtil.generateToken(UserDetails.getUsername());
-		
-		Map<String, String> response = new HashMap<>();
-		response.put("token", jwt);
-		return ResponseEntity.ok(response);
-	}
 	
 	@PostMapping("/reset-password")
 	public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request){
